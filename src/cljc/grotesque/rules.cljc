@@ -1,5 +1,6 @@
 (ns grotesque.rules
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [grotesque.util :as util]))
 
 (defn parse-body-part
   "Accepted body parts are in vector, keyword or string forms.
@@ -24,7 +25,7 @@
   [body]
   (if (vector? body)
     (reduce parse-body-part {:text (first body)} (rest body))
-    {:text body}))
+    {:text (util/parse-symbol-string body)}))
 
 (defn- add-bodies
   "Util function for adding rules without overwriting old ones."

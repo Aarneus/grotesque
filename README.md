@@ -14,14 +14,15 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 
 ## Features to be done for 1.0
 - [x] Rule parsing
-- [ ] Text generation
+- [x] Text generation
 - [ ] Effects and conditions
 - [ ] Configurable error logging function
 - [ ] Configurable invocation handling function
 - [ ] Configurable rule picker function
 - [ ] Model (de)serialization
-- [ ] Documentation
-- [ ] Unit tests
+- [ ] User documentation
+- [ ] Unit tests and schema validation
+- [ ] Optimization
 
 ## Possible future features
 - Sample project (NaNoGenMo 2019?)
