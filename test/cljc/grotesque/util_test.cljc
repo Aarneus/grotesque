@@ -4,5 +4,8 @@
                :clj  [clojure.test :refer [is are deftest testing]])))
 
 (testing "parse-symbol-string"
-  (is (= (util/parse-symbol-string "#A-1##B#cde#FG#hi")
-         [:A-1 :B "cde" :FG "hi"])))
+  (are [s v] (= v (util/parse-symbol-string s))
+             "" []
+             "abc" ["abc"]
+             "Hello #world#" ["Hello " :world]
+             "#A-1##B#cde#FG#hi" [:A-1 :B "cde" :FG "hi"]))
