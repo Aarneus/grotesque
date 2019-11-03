@@ -15,19 +15,21 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 ## Features to be done for 1.0
 - [x] Rule parsing
 - [x] Text generation
+- [x] Unit testing
 - [ ] Effects and conditions
 - [ ] Configurable error logging function
-- [ ] Configurable invocation handling function
+- [ ] Configurable activation function
 - [ ] Configurable rule picker function
-- [ ] Model (de)serialization
 - [ ] User documentation
-- [ ] Unit tests and schema validation
-- [ ] Optimization
+- [ ] Schema validation
 
 ## Possible future features
+- Optimizations
 - Sample project (NaNoGenMo 2019?)
 - Support for Tracery style modifiers
-- Grammar generation utility functions?
+- Parameters for non-terminal tokens
+- ClojureScript unit testing config
+- Grammar generation utilities
 
 ## Usage
 
