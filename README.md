@@ -25,6 +25,7 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 
 ## Possible future features
 - Optimizations
+- Pattern matching
 - Sample project (NaNoGenMo 2019?)
 - Support for Tracery style modifiers
 - Parameters for non-terminal tokens
