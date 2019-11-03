@@ -45,7 +45,8 @@
 
 (defn add-rules
   "Takes a map of rules.
-   The preferred form is a mapping of rule head to a vector of body text, followed by optional conditions and effects:
+   The preferred form is a mapping of rule head to a vector of body text,
+   followed by optional conditions and effects:
    {:animal [[\"okapi\" :when.animal.type.okapi]
              [\"giraffe\" :when.animal.length.tall]
              \"antilope\"

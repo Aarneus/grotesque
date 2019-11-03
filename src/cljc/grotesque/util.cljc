@@ -6,13 +6,6 @@
    E.g. \"There is an #animal# here.\" => [\"There is an \" :animal \" here.\"]"
   [s]
   (->> (string/split s #"#")
-       (zipmap (range))
-       (map #(if (even? (first %))
-               (second %)
-               (keyword (second %))))
-       (remove #(= "" %))
+       (map #(if (even? %1) %2 (keyword %2)) (range))
+       (remove #(or (= nil %) (= "" %)))
        vec))
-
-
-
-
