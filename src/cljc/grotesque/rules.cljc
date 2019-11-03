@@ -24,7 +24,7 @@
    A string is converted to a simple body with no state conditions or effects."
   [body]
   (if (vector? body)
-    (reduce parse-body-part {:text (first body)} (rest body))
+    (reduce parse-body-part {:text (util/parse-symbol-string (first body))} (rest body))
     {:text (util/parse-symbol-string body)}))
 
 (defn- add-bodies

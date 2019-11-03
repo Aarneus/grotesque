@@ -32,20 +32,20 @@
    :story       ["#set-time##set-gender#The #sky# was looming overhead. So #they# adjusted #their# glasses."]})
 
 (def test-rules-processed
-  {:color [{:text "black", :when [[:time :night]]}
-           {:text "red", :when [[:time :evening]]}
-           {:text "blue", :when [[:time :day]]}],
+  {:color [{:text ["black"], :when [[:time :night]]}
+           {:text ["red"], :when [[:time :evening]]}
+           {:text ["blue"], :when [[:time :day]]}],
   :sky   [{:text [:color " sky"]}]
-  :they  [{:text "he", :when [[:actor :gender :he]]}
-          {:text "she", :when [[:actor :gender :she]]}
-          {:text "they", :when [[:actor :gender :they]]}]
-  :their [{:text "his", :when [[:actor :gender :he]]}
-          {:text "her", :when [[:actor :gender :she]]}
-          {:text "their", :when [[:actor :gender :they]]}],
-  :set-time [{:text "", :set [[:time :night]]}
-             {:text "", :set [[:time :evening]]}
-             {:text "", :set [[:time :day]]}],
-  :set-gender [{:text "", :set [[:actor :gender :he]]}
-               {:text "", :set [[:actor :gender :she]]}
-               {:text "", :set [[:actor :gender :they]]}],
+  :they  [{:text ["he"], :when [[:actor :gender :he]]}
+          {:text ["she"], :when [[:actor :gender :she]]}
+          {:text ["they"], :when [[:actor :gender :they]]}]
+  :their [{:text ["his"], :when [[:actor :gender :he]]}
+          {:text ["her"], :when [[:actor :gender :she]]}
+          {:text ["their"], :when [[:actor :gender :they]]}],
+  :set-time [{:text [], :set [[:time :night]]}
+             {:text [], :set [[:time :evening]]}
+             {:text [], :set [[:time :day]]}],
+  :set-gender [{:text [], :set [[:actor :gender :he]]}
+               {:text [], :set [[:actor :gender :she]]}
+               {:text [], :set [[:actor :gender :they]]}],
   :story      [{:text [:set-time :set-gender "The " :sky " was looming overhead. So " :they " adjusted " :their " glasses."]}]})

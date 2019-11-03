@@ -16,7 +16,7 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 - [x] Rule parsing
 - [x] Text generation
 - [x] Unit testing
-- [ ] Effects and conditions
+- [x] Effects and conditions
 - [ ] Configurable error logging function
 - [ ] Configurable activation function
 - [ ] Configurable rule picker function
@@ -26,6 +26,7 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 ## Possible future features
 - Optimizations
 - Pattern matching
+- Other effect and condition types
 - Sample project (NaNoGenMo 2019?)
 - Support for Tracery style modifiers
 - Parameters for non-terminal tokens
