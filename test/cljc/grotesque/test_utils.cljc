@@ -23,12 +23,12 @@
    :their       [["his" :when.actor.gender.he]
                  ["her" :when.actor.gender.she]
                  ["their" :when.actor.gender.they]]
-   :set-time    [["" :set.time.night]
-                 ["" :set.time.evening]
-                 ["" :set.time.day]]
-   :set-gender  [["" :set.actor.gender.he]
-                 ["" :set.actor.gender.she]
-                 ["" :set.actor.gender.they]]
+   :set-time    [[:set.time.night]
+                 [:set.time.evening]
+                 [:set.time.day]]
+   :set-gender  [[:set.actor.gender.he]
+                 [:set.actor.gender.she]
+                 [:set.actor.gender.they]]
    :story       ["#set-time##set-gender#The #sky# was looming overhead. So #they# adjusted #their# glasses."]})
 
 (def test-rules-processed
@@ -42,10 +42,10 @@
   :their [{:text ["his"], :bodies {:when [[:actor :gender :he]]}}
           {:text ["her"], :bodies {:when [[:actor :gender :she]]}}
           {:text ["their"], :bodies {:when [[:actor :gender :they]]}}],
-  :set-time [{:text [], :bodies {:set [[:time :night]]}}
-             {:text [], :bodies {:set [[:time :evening]]}}
-             {:text [], :bodies {:set [[:time :day]]}}],
-  :set-gender [{:text [], :bodies {:set [[:actor :gender :he]]}}
-               {:text [], :bodies {:set [[:actor :gender :she]]}}
-               {:text [], :bodies {:set [[:actor :gender :they]]}}],
+  :set-time [{:bodies {:set [[:time :night]]}}
+             {:bodies {:set [[:time :evening]]}}
+             {:bodies {:set [[:time :day]]}}],
+  :set-gender [{:bodies {:set [[:actor :gender :he]]}}
+               {:bodies {:set [[:actor :gender :she]]}}
+               {:bodies {:set [[:actor :gender :they]]}}],
   :story      [{:text [:set-time :set-gender "The " :sky " was looming overhead. So " :they " adjusted " :their " glasses."]}]})

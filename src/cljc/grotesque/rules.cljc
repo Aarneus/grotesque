@@ -25,8 +25,10 @@
   [body]
   (if (vector? body)
     (reduce parse-body-part
-            {:text (util/parse-symbol-string (first body))}
-            (rest body))
+            (if-let [text (->> body (filter string?) first)]
+              {:text (util/parse-symbol-string text)}
+              {})
+            (filter (complement string?) body))
     {:text (util/parse-symbol-string body)}))
 
 (defn- add-bodies
