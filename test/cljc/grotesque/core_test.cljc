@@ -20,6 +20,7 @@
                    grotesque/create-grammar
                    (grotesque/generate "#S#")
                    :generated))))
+
 (testing "generate with model"
   (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
                        :set-var [["" :set.banana.tree.value.A]]

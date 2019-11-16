@@ -17,8 +17,8 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 - [x] Text generation
 - [x] Unit testing
 - [x] Effects and conditions
+- [x] Configurable effects and conditions
 - [ ] Configurable error logging function
-- [ ] Configurable activation function
 - [ ] Configurable rule picker function
 - [ ] User documentation
 - [ ] Schema validation
