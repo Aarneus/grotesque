@@ -7,7 +7,7 @@
   [grammar]
   (get-in grammar [:functions :picker] #(when-not (empty? %) (rand-nth %))))
 
-(defn invoke-rule
+(defn- invoke-rule
   "Returns the results of the rule invocation as a vector of terminal and non-terminal symbols."
   [grammar non-terminal]
   (if-let [rule-body (->> (get-in grammar [:rules non-terminal] [])
@@ -25,7 +25,7 @@
          expanded                   []
          [next-token & rest-tokens] starting-vector]
     (if (nil? next-token)
-      [current-grammar (string/join expanded)]
+      (assoc current-grammar :generated (string/join expanded))
       (if (string? next-token)
         (recur current-grammar (conj expanded next-token) rest-tokens)
         (let [[new-grammar coll] (invoke-rule current-grammar next-token)]

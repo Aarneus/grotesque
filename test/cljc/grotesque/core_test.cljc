@@ -10,23 +10,24 @@
 (testing "create-grammar"
   (test-diff (grotesque/create-grammar)
              {:model {} :rules {}}))
-  (test-diff test-grammar
-             {:model {}
-              :rules test-utils/test-rules-processed})
+(test-diff test-grammar
+           {:model {}
+            :rules test-utils/test-rules-processed})
 
 (testing "generate"
   (is (= "abc" (-> {:S ["a#B#"] :B ["b#C#"] :C ["c"]}
-                    grotesque/create-grammar
-                    (grotesque/generate "#S#")
-                   second)))
-  (is (= "ABCDEF" (-> {:S ["#set-var##get-var##get-var#"]
+                   grotesque/create-grammar
+                   (grotesque/generate "#S#")
+                   :generated)))
+  (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
                        :set-var [["" :set.banana.tree.value.A]]
                        :get-var [["DEF" :when.banana.tree.value.D]
                                  ["GHI" :when.banana.tree]
                                  ["ABC" :when.banana.tree.value.A :set.banana.tree.value.D]]}
                       grotesque/create-grammar
                       (grotesque/generate "#S#")
-                      second)))
-  (is (let [[new-grammar s] (grotesque/generate test-grammar "#story#")]
+                      :generated)))
+  (is (let [new-grammar (grotesque/generate test-grammar "#story#")
+            s           (:generated new-grammar)]
         (println "Generated:" s)
         (and (map? new-grammar) (string? s)))))
