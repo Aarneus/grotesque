@@ -21,7 +21,7 @@
                    (grotesque/generate "#S#")
                    :generated))))
 
-(testing "generate with model"
+(testing "generate (with model)"
   (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
                        :set-var [["" :set.banana.tree.value.A]]
                        :get-var [["DEF" :when.banana.tree.value.D]
@@ -33,5 +33,4 @@
                       :generated)))
   (is (let [new-grammar (grotesque/generate test-grammar "#story#")
             s           (:generated new-grammar)]
-        (println "Generated:" s)
         (and (map? new-grammar) (string? s)))))

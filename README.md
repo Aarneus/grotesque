@@ -17,24 +17,20 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 - [x] Text generation
 - [x] Unit testing
 - [x] Effects and conditions
-- [x] Configurable effects and conditions
-- [ ] Configurable error logging function
-- [ ] Configurable rule picker function
+- [x] Schema validation
+- [ ] Error logging
+- [ ] Rule picking functions
 - [ ] User documentation
-- [ ] Schema validation
 
 ## Possible future features
 - Optimizations
 - Pattern matching
-- Other effect and condition types
 - Sample project (NaNoGenMo 2019?)
 - Support for Tracery style modifiers
 - Parameters for non-terminal tokens
-- ClojureScript unit testing config
-- Grammar generation utilities
+- Visualization
 
 ## Usage
-
 This is still a WIP.
 
 More documentation to come.
