@@ -11,20 +11,22 @@
    3. String: \"when.weather.snowing\", \"set.mood.chill\"
    All the above examples would result in the following (when body is {}):
    {:when [[:when :weather :snowing]], :set [[:set :mood :chill]]}"
-  [body part]
+  [rule part]
   (if (vector? part)
-    (update body (first part) #(conj (vec %) (vec (rest part))))
+    (update-in rule [:bodies (first part)] #(conj (vec %) (vec (rest part))))
     (-> (name part)
         (string/split #"\.")
         (->> (mapv keyword)
-             (recur body)))))
+             (recur rule)))))
 
 (defn parse-body
   "Accepts bodies in vector or string forms.
    A string is converted to a simple body with no state conditions or effects."
   [body]
   (if (vector? body)
-    (reduce parse-body-part {:text (util/parse-symbol-string (first body))} (rest body))
+    (reduce parse-body-part
+            {:text (util/parse-symbol-string (first body))}
+            (rest body))
     {:text (util/parse-symbol-string body)}))
 
 (defn- add-bodies

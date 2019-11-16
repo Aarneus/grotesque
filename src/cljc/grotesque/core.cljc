@@ -3,8 +3,8 @@
             [grotesque.rules :as rules]
             [grotesque.invocation :as invocation]))
 
-(def empty-grammar {:model {}
-                    :rules {}})
+(def empty-grammar {:model      {}
+                    :rules      {}})
 
 (defn create-grammar
   "Initialize a new grammar, with optional rules data.
