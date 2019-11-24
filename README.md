@@ -18,8 +18,8 @@ Essentially a cleaner, simpler version of the system I used for [my NaNoGenMo 20
 - [x] Unit testing
 - [x] Effects and conditions
 - [x] Schema validation
+- [x] Rule picking options
 - [ ] Error logging
-- [ ] Rule picking functions
 - [ ] User documentation
 
 ## Possible future features

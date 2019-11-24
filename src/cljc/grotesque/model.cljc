@@ -69,11 +69,11 @@
 
 (defn execute-rule
   "Returns the new grammar state after performing all effects in the given rule."
-  [grammar rule]
+  [grammar]
   (reduce (fn [grammar type]             ; Iterate over all effect types
             (reduce (fn [grammar effect] ; Iterate over all effects of given type
                       ((-> grammar :effects type) grammar effect))
                     grammar
-                    (-> rule :bodies type)))
+                    (-> grammar :picked-rule :bodies type)))
           grammar
           (keys (:effects grammar))))

@@ -1,19 +1,21 @@
 (ns grotesque.invocation
   (:require [clojure.string :as string]
-            [grotesque.model :as model]))
+            [grotesque.model :as model]
+            [grotesque.picker-fns :refer [random-picker-fn]]))
 
 (defn get-picker
   "Returns the chosen picker for the grammar"
   [grammar]
-  (get-in grammar [:functions :picker] #(when-not (empty? %) (rand-nth %))))
+  (or (-> grammar :functions :picker-fn)
+      random-picker-fn))
 
 (defn- invoke-rule
   "Returns the results of the rule invocation as a vector of terminal and non-terminal symbols."
   [grammar non-terminal]
-  (if-let [rule-body (->> (get-in grammar [:rules non-terminal] [])
-                          (filter #(model/valid-rule? grammar %))
-                          ((get-picker grammar)))]
-    [(model/execute-rule grammar rule-body) (:text rule-body)]
+  (if-let [new-grammar (->> (get-in grammar [:rules non-terminal] [])
+                            (filter #(model/valid-rule? grammar %))
+                            ((get-picker grammar) grammar))]
+    [(model/execute-rule new-grammar) (-> new-grammar :picked-rule :text)]
     [grammar [""]]))
 
 (defn generate

@@ -32,20 +32,26 @@
     {:text (util/parse-symbol-string body)}))
 
 (defn- add-bodies
-  "Util function for adding rules without overwriting old ones."
-  [old-bodies new-bodies]
-  (->> new-bodies
-       (map parse-body)
-       (concat old-bodies)
-       vec))
+  "Util function for adding rules without overwriting old ones
+   Every rule's id equals that rule's head appended with the rule's index.
+   So for example, the indices of the rule `:weather` would be
+   :weather-0, :weather-1, :weather-2, ..."
+  [head old-bodies new-bodies]
+  (let [new-first-index (count old-bodies)
+        new-indices     (map #(+ new-first-index %) (range (count new-bodies)))
+        new-ids         (map #(keyword (str (name head) "-" %)) new-indices)]
+    (->> (map #(assoc (parse-body %2) :id %1) new-ids new-bodies)
+         (concat old-bodies)
+         vec)))
 
 (defn add-rule
   "Adds the given rule to the grammar.
    See the comment on add-rules for more detail."
   [grammar [head bodies]]
-  (update-in grammar
-             [:rules (keyword head)]
-             #(add-bodies % bodies)))
+  (let [head (keyword head)]
+    (update-in grammar
+               [:rules head]
+               #(add-bodies head % bodies))))
 
 (defn add-rules
   "Takes a map of rules.
