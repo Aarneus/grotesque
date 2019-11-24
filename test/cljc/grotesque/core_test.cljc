@@ -9,11 +9,9 @@
 
 (testing "create-grammar"
   (test-diff (grotesque/create-grammar)
-             {:model {}
-              :rules {}})
+             {:rules {}})
   (test-diff test-grammar
-             {:model {}
-              :rules test-utils/test-rules-processed}))
+             {:rules test-utils/test-rules-processed}))
 
 (testing "generate"
   (is (= "abc" (-> {:S ["a#B#"] :B ["b#C#"] :C ["c"]}
