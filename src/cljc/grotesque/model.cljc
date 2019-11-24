@@ -1,19 +1,25 @@
 (ns grotesque.model)
 
-(defn- default-condition?
-  "Returns true if the state is as described.
-   The condition is simply a tuple of keywords, e.g. [:car :color :red]"
+(defn default-condition-when
+  "Returns true if the fact has the given value.
+   The fact is simply a tuple of keywords, e.g. [:car :color :red]"
   [grammar condition]
   (= (last condition)
      (get-in (:model grammar) (drop-last condition) nil)))
 
-(defn- default-effect-unset
+(defn default-condition-when-any
+  "Returns true if the fact has any non-nil value.
+   The fact is simply a tuple of keywords, e.g. [:car :color]"
+  [grammar condition]
+  (some? (get-in (:model grammar) condition)))
+
+(defn default-effect-unset
   "Removes the given fact to the grammar's model.
    The fact is simply a tuple of keywords, e.g. [:car :color]"
   [grammar effect]
   (update-in grammar (concat [:model] (drop-last effect)) dissoc (last effect)))
 
-(defn- default-effect-set
+(defn default-effect-set
   "Adds the given fact to the grammar's model.
    The fact is simply a tuple of keywords, e.g. [:car :color :red]"
   [grammar effect]
@@ -41,8 +47,13 @@
   (-> grammar
       (set-effect-handler :set default-effect-set)
       (set-effect-handler :unset default-effect-unset)
-      (set-condition-validator :when default-condition?)
-      (set-condition-validator :when-not (complement default-condition?))))
+      (set-effect-handler :when-set default-effect-set)
+      (set-condition-validator :when default-condition-when)
+      (set-condition-validator :when-not (complement default-condition-when))
+      (set-condition-validator :when-any default-condition-when-any)
+      (set-condition-validator :when-nil (complement default-condition-when-any))
+      (set-condition-validator :when-set #(or (default-condition-when %1 %2)
+                                              (not (default-condition-when-any %1 (drop-last %2)))))))
 
 (defn valid-rule?
   "Returns true if the given rule body's conditions match the current grammar state."
