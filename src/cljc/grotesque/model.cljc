@@ -1,4 +1,6 @@
-(ns grotesque.model)
+(ns grotesque.model
+  (:require [clojure.string :as str]
+            [grotesque.util :as util]))
 
 (defn default-condition-when
   "Returns true if the fact has the given value.
@@ -55,25 +57,42 @@
       (set-condition-validator :when-set #(or (default-condition-when %1 %2)
                                               (not (default-condition-when-any %1 (drop-last %2)))))))
 
+(defn- get-body-str
+  [type body]
+  (->> (concat [type] body)
+       (map name)
+       (str/join ".")))
+
 (defn valid-rule?
   "Returns true if the given rule body's conditions match the current grammar state."
   [grammar rule]
-  (let [condition-types        (keys (:conditions grammar))
-        get-conditions-of-type (fn [type]
-                                 (-> rule :bodies type))
-        condition-valid?       (fn [type grammar condition]
-                                 ((-> grammar :conditions type) grammar condition))]
-    (every? #(every? (partial condition-valid? % grammar)
-                     (get-conditions-of-type %))
-            condition-types)))
+  (try
+    (let [condition-types        (keys (:conditions grammar))
+          get-conditions-of-type (fn [type]
+                                   (-> rule :bodies type))
+          condition-valid?       (fn [type grammar condition]
+                                   (try
+                                     ((-> grammar :conditions type) grammar condition)
+                                     (catch #?(:cljs js/Error, :clj Exception) e
+                                       (util/throw-cljc (str "Condition '" (get-body-str type condition) "'") e))))]
+      (every? #(every? (partial condition-valid? % grammar)
+                       (get-conditions-of-type %))
+              condition-types))
+    (catch #?(:cljs js/Error, :clj Exception) e
+      (util/throw-cljc (str "Condition error in rule '" (:id rule) "'") e))))
 
 (defn execute-rule
   "Returns the new grammar state after performing all effects in the given rule."
   [grammar]
-  (reduce (fn [grammar type]             ; Iterate over all effect types
-            (reduce (fn [grammar effect] ; Iterate over all effects of given type
-                      ((-> grammar :effects type) grammar effect))
-                    grammar
-                    (-> grammar :picked-rule :bodies type)))
-          grammar
-          (keys (:effects grammar))))
+  (try
+    (if (-> grammar :picked-rule nil?)
+      grammar
+      (reduce (fn [grammar type]             ; Iterate over all effect types
+                (reduce (fn [grammar effect] ; Iterate over all effects of given type
+                          ((-> grammar :effects type) grammar effect))
+                        grammar
+                        (-> grammar :picked-rule :bodies type)))
+              grammar
+              (keys (:effects grammar))))
+    (catch #?(:cljs js/Error, :clj Exception) e
+      (util/throw-cljc (str "Effect error in rule '" (-> grammar :picked-rule :id) "'") e))))

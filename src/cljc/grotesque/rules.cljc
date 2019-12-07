@@ -31,6 +31,14 @@
             (filter (complement string?) body))
     {:text (util/parse-symbol-string body)}))
 
+(defn- try-parse
+  "Wraps a parse effort in a try so we can log any errors."
+  [id unparsed-body]
+  (try
+    (assoc (parse-body unparsed-body) :id id)
+    (catch #?(:cljs js/Error, :clj Exception) e
+      (util/throw-cljc (str "While parsing rule '" (name id) "'") e))))
+
 (defn- add-bodies
   "Util function for adding rules without overwriting old ones
    Every rule's id equals that rule's head appended with the rule's index.
@@ -40,7 +48,7 @@
   (let [new-first-index (count old-bodies)
         new-indices     (map #(+ new-first-index %) (range (count new-bodies)))
         new-ids         (map #(keyword (str (name head) "-" %)) new-indices)]
-    (->> (map #(assoc (parse-body %2) :id %1) new-ids new-bodies)
+    (->> (map try-parse new-ids new-bodies)
          (concat old-bodies)
          vec)))
 
@@ -48,10 +56,11 @@
   "Adds the given rule to the grammar.
    See the comment on add-rules for more detail."
   [grammar [head bodies]]
-  (let [head (keyword head)]
-    (update-in grammar
-               [:rules head]
-               #(add-bodies head % bodies))))
+  (util/try-catch-cljc grammar (str "Error in '" (name head) "':")
+    (let [head (keyword head)]
+      (update-in grammar
+                 [:rules head]
+                 #(add-bodies head % bodies)))))
 
 (defn add-rules
   "Takes a map of rules.
@@ -65,4 +74,4 @@
    {\"animal\" [\"okapi\", \"giraffe\", \"antilope\",
     \"job\" [\"doctor\", \"lawyer\", \"gambler\"]}"
   [grammar rules]
-  (reduce add-rule grammar rules))
+  (reduce add-rule (assoc grammar :errors []) rules))

@@ -1,6 +1,5 @@
 (ns grotesque.core-test
   (:require [grotesque.core :as grotesque]
-            [grotesque.model :as model]
             [grotesque.test-utils :as test-utils :refer [test-diff]]
             #?(:cljs [cljs.test :refer-macros [is are deftest testing]]
                :clj  [clojure.test :refer [is are deftest testing]])))
@@ -8,27 +7,35 @@
 (def test-grammar (grotesque/create-grammar test-utils/test-rules))
 
 (testing "create-grammar"
-  (test-diff (grotesque/create-grammar)
-             {:rules {}})
-  (test-diff test-grammar
-             {:rules test-utils/test-rules-processed}))
+  (test-diff {:rules {} :errors []}
+             (grotesque/create-grammar))
+  (test-diff {:rules test-utils/test-rules-processed :errors []}
+             test-grammar))
 
 (testing "generate"
   (is (= "abc" (-> {:S ["a#B#"] :B ["b#C#"] :C ["c"]}
                    grotesque/create-grammar
                    (grotesque/generate "#S#")
-                   :generated))))
-
-(testing "generate (with model)"
-  (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
-                       :set-var [["" :set.banana.tree.value.A]]
-                       :get-var [["DEF" :when.banana.tree.value.D]
-                                 ["GHI" :when.banana.tree]
-                                 ["ABC" :when.banana.tree.value.A :set.banana.tree.value.D]]}
-                      grotesque/create-grammar
-                      model/enable-default-model
-                      (grotesque/generate "#S#")
-                      :generated)))
+                   :generated)))
   (is (let [new-grammar (grotesque/generate test-grammar "#story#")
             s           (:generated new-grammar)]
         (and (map? new-grammar) (string? s)))))
+
+(testing "parse errors"
+  (test-diff (-> {:S [["#a#" 12]]}
+                 grotesque/create-grammar)
+             {:errors #?(:cljs ["Error in 'S':\nWhile parsing rule 'S-0':\n"]
+                         :clj  ["Error in 'S':\nWhile parsing rule 'S-0':\njava.lang.Long cannot be cast to clojure.lang.Named"])
+              :rules  {}}))
+
+(testing "missing rule"
+  (test-diff (-> {:S ["textS #A#"]
+                  :A ["textA #b# #C#"]
+                  :B ["textB"]
+                  :C ["textC"]}
+                 grotesque/create-grammar
+                 (grotesque/generate "#S#")
+                 (select-keys [:errors :generated]))
+             {:errors ["Error while invoking 'b':\nNo rule 'b' found, a possible typo?"
+                       "No valid rule 'b' found"]
+              :generated "textS textA  textC"}))

@@ -3,7 +3,8 @@
             [grotesque.rules :as rules]
             [grotesque.invocation :as invocation]))
 
-(def empty-grammar {:rules      {}})
+(def empty-grammar {:rules      {}
+                    :errors     []})
 
 (defn create-grammar
   "Initialize a new grammar, with optional rules data.
@@ -21,11 +22,11 @@
    \"There is an #adjective# #animal#.\"
    Vector:
    [\"There is an \" :adjective \" \" :animal \".\"]
-   Returns a tuple of the updated grammar and the generated string."
+   Returns the new grammar with the generated string under the `:generated` - key."
   [grammar starting-string]
   (if (string? starting-string)
     (recur grammar (util/parse-symbol-string starting-string))
-    (invocation/generate grammar starting-string)))
+    (invocation/generate (assoc grammar :errors []) starting-string)))
 
 
 

@@ -3,25 +3,21 @@
             #?(:cljs [cljs.test :refer-macros [is are deftest testing]]
                :clj  [clojure.test :refer [is are deftest testing]])
             #?(:cljs [schema.core :as s :include-macros true]
-               :clj  [schema.core :as s])
-            #?(:cljs [cljs.core.async :refer [chan close!]])
-            #?(:cljs [cljs.core.async.macros :refer [go]])))
+               :clj  [schema.core :as s])))
 
 (defn sleep
   "Sleeps the given number of milliseconds.
    ClojureScript variant is untested."
   [ms]
-  #?(:cljs (go (<! (#(let [c (chan)]
-                       (js/setTimeout (fn [] (close! c)) ms) c)
-                     ms)))
-     :clj (Thread/sleep ms)))
+  #?(:cljs (reduce + (range 1000000)) ; Do random stuff to make time pass
+     :clj  (Thread/sleep ms)))
 
 (defn test-diff
   "Tests the difference between two maps"
   [& args]
   (let [[in-first in-second _in-both] (apply data/diff args)]
-    (is (= in-first nil))
-    (is (= in-second nil))))
+    (is (= nil in-first))
+    (is (= nil in-second))))
 
 (defn validate-schema
   "Validates the given value against the given schema"

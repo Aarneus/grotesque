@@ -9,3 +9,8 @@
              "abc" ["abc"]
              "Hello #world#" ["Hello " :world]
              "#A-1##B#cde#FG#hi" [:A-1 :B "cde" :FG "hi"]))
+
+(testing "try-catch-cljc"
+  (is (= {:errors ["catched-msg\nthrown-msg"]}
+         (util/try-catch-cljc {} "catched-msg"
+           (util/throw-cljc "thrown-msg")))))
