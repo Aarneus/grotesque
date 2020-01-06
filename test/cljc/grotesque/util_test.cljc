@@ -8,6 +8,7 @@
              "" []
              "abc" ["abc"]
              "Hello #world#" ["Hello " :world]
+             "Hello [world.state]" ["Hello " :world.state]
              "#A-1##B#cde#FG#hi" [:A-1 :B "cde" :FG "hi"]))
 
 (testing "try-catch-cljc"

@@ -2,8 +2,8 @@
   (:require [clojure.string :as string]
             [grotesque.util :as util]))
 
-(defn parse-body-part
-  "Accepted body parts are in vector, keyword or string forms.
+(defn parse-tag
+  "Accepted tags are in vector, keyword or string forms.
    Vectors are the preferred form that the other forms are converted to.
    Example inputs (condition first, effect second):
    1. Vector: [:when :weather :snowing], [:set :mood :chill]
@@ -13,7 +13,7 @@
    {:when [[:when :weather :snowing]], :set [[:set :mood :chill]]}"
   [rule part]
   (if (vector? part)
-    (update-in rule [:bodies (first part)] #(conj (vec %) (vec (rest part))))
+    (update-in rule [:tags (first part)] #(conj (vec %) (vec (rest part))))
     (-> (name part)
         (string/split #"\.")
         (->> (mapv keyword)
@@ -24,11 +24,11 @@
    A string is converted to a simple body with no state conditions or effects."
   [body]
   (if (vector? body)
-    (reduce parse-body-part
+    (reduce parse-tag
             (if-let [text (->> body (filter string?) first)]
               {:text (util/parse-symbol-string text)}
               {})
-            (filter (complement string?) body))
+            (remove string? body))
     {:text (util/parse-symbol-string body)}))
 
 (defn- try-parse
@@ -64,12 +64,13 @@
 
 (defn add-rules
   "Takes a map of rules.
-   The preferred form is a mapping of rule head to a vector of body text,
-   followed by optional conditions and effects:
+   The preferred form is a mapping of rule head to a vector where the first element is text,
+   followed by optional keyword tags:
    {:animal [[\"okapi\" :when.animal.type.okapi]
              [\"giraffe\" :when.animal.length.tall]
              \"antilope\"
     :job    [\"doctor\" \"lawyer\" \"gambler\"]}
+
    Tracery style rule map with just string keys to a vector of string values is also accepted:
    {\"animal\" [\"okapi\", \"giraffe\", \"antilope\",
     \"job\" [\"doctor\", \"lawyer\", \"gambler\"]}"

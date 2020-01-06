@@ -7,12 +7,18 @@
                :clj  [clojure.test :refer [is are deftest testing]])))
 
 (def test-grammar (->> test-utils/test-rules
-                       grotesque/create-grammar
-                       model/enable-default-model))
+                       grotesque/create-grammar))
 
 (testing "schema validation after creation"
   (validate-schema schema/Grammar test-grammar))
 
 (testing "schema validation after generation"
-  (->> (grotesque/generate test-grammar "#story#")
-       (validate-schema schema/Grammar)))
+  (-> (grotesque/generate test-grammar "#story#")
+      (->> (validate-schema schema/Grammar))))
+
+(testing "schema validation with dummy functions"
+  (-> test-grammar
+      (grotesque/set-selector identity)
+      (grotesque/set-handler :test identity)
+      (grotesque/set-validator :test identity)
+      (->> (validate-schema schema/Grammar))))

@@ -1,7 +1,8 @@
 (ns grotesque.core
-  (:require [grotesque.util :as util]
+  (:require [grotesque.invocation :as invocation]
+            [grotesque.model :as model]
             [grotesque.rules :as rules]
-            [grotesque.invocation :as invocation]))
+            [grotesque.util :as util]))
 
 (def empty-grammar {:rules      {}
                     :errors     []})
@@ -28,7 +29,21 @@
     (recur grammar (util/parse-symbol-string starting-string))
     (invocation/generate (assoc grammar :errors []) starting-string)))
 
+(def set-handler
+  "Sets the function the grammar uses to handle a tag that is an effect.
+   See the `docs/model.md` for more details."
+  model/set-effect-handler)
 
+(def set-validator
+  "Sets the function the grammar uses to validate a tag that is a condition.
+   See the `docs/model.md` for more details."
+  model/set-condition-validator)
+
+(defn set-selector
+  "Sets the function the grammar uses to select a rule from all valid options.
+   See the `docs/selection.md` for more details."
+  [grammar selector-fn]
+  (assoc-in grammar [:functions :selector-fn] selector-fn))
 
 
 

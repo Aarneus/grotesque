@@ -6,6 +6,17 @@
             #?(:cljs [cljs.test :refer-macros [is are deftest testing]]
                :clj  [clojure.test :refer [is are deftest testing]])))
 
+
+(defn test-set-handler
+  "Test effect handler"
+  [grammar effect]
+  (assoc-in grammar (concat [:data :model] (drop-last effect)) (last effect)))
+
+(defn test-when-validator
+  "Test condition validator"
+  [grammar condition]
+  (= (last condition) (get-in grammar (concat [:data :model] (drop-last condition)))))
+
 (testing "generate (with model)"
   (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
                        :set-var [["" :set.banana.tree.value.A]]
@@ -13,7 +24,8 @@
                                  ["GHI" :when.banana.tree]
                                  ["ABC" :when.banana.tree.value.A :set.banana.tree.value.D]]}
                       grotesque/create-grammar
-                      model/enable-default-model
+                      (grotesque/set-handler :set test-set-handler)
+                      (grotesque/set-validator :when test-when-validator)
                       (grotesque/generate "#S#")
                       :generated))))
 

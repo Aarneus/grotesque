@@ -18,7 +18,7 @@
                    (grotesque/generate "#S#")
                    :generated)))
   (is (let [new-grammar (grotesque/generate test-grammar "#story#")
-            s           (:generated new-grammar)]
+            s (:generated new-grammar)]
         (and (map? new-grammar) (string? s)))))
 
 (testing "parse errors"
@@ -36,6 +36,20 @@
                  grotesque/create-grammar
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
-             {:errors ["Error while invoking 'b':\nNo rule 'b' found, a possible typo?"
-                       "No valid rule 'b' found"]
+             {:errors    ["Error while invoking 'b':\nNo rule 'b' found, a possible typo?"
+                          "No valid rule 'b' found"]
               :generated "textS textA  textC"}))
+
+(testing "selectors"
+  (let [meta-selector-fn (fn [grammar head bodies]
+                           (is (= :S head))
+                           (is (= bodies [{:id :S-0, :text ["a"]}
+                                          {:id :S-1, :text ["b"]}
+                                          {:id :S-2, :text ["c"]}]))
+                           (assoc grammar :selected {:id :meta, :text ["Meta rules!"]}))]
+    (is (= "Meta rules!"
+           (-> {:S ["a" "b" "c"]}
+               grotesque/create-grammar
+               (grotesque/set-selector meta-selector-fn)
+               (grotesque/generate "[S]")
+               :generated)))))

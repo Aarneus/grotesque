@@ -1,25 +1,28 @@
 (ns grotesque.invocation
   (:require [clojure.string :as string]
             [grotesque.model :as model]
-            [grotesque.picker-fns :refer [random-picker-fn]]
             [grotesque.util :as util]))
 
-(defn get-picker
+(defn- default-selector-fn
+  [grammar head bodies]
+  (assoc grammar :selected (rand-nth bodies)))
+
+(defn get-selector-fn
   "Returns the chosen picker for the grammar."
   [grammar]
-  (or (-> grammar :functions :picker-fn)
-      random-picker-fn))
+  (or (-> grammar :functions :selector-fn)
+      default-selector-fn))
 
 (defn picked-some?
   "Returns true if a rule has been picked"
   [grammar]
-  (-> grammar :picked-rule some?))
+  (-> grammar :selected some?))
 
 (defn- invoke-rule
   "Returns a tuple with the grammar and the results of the rule invocation
    (as a vector of terminal and non-terminal symbols)."
   [grammar non-terminal]
-  (let [grammar     (dissoc grammar :picked-rule)
+  (let [grammar     (dissoc grammar :selected)
         new-grammar (util/try-catch-cljc
                       grammar
                       (str "Error while invoking '" (name non-terminal) "':")
@@ -27,10 +30,10 @@
                         (util/throw-cljc (str "No rule '" (name non-terminal) "' found, a possible typo?")))
                       (->> (get-in grammar [:rules non-terminal] [])
                            (filter #(model/valid-rule? grammar %))
-                           ((get-picker grammar) grammar)
+                           ((get-selector-fn grammar) grammar non-terminal)
                            model/execute-rule))]
     (if (picked-some? new-grammar)
-       [new-grammar (or (-> new-grammar :picked-rule :text) [""])]
+       [new-grammar (or (-> new-grammar :selected :text) [""])]
        [(util/add-error new-grammar (str "No valid rule '" (name non-terminal) "' found")) [""]])))
 
 (defn generate
