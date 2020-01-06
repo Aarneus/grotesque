@@ -1,5 +1,6 @@
+[Back to overview](overview.md)
 
-## State handling - tags, conditions and effects
+## State handling
 Usually when generating text it is not enough to have the grammar select rules totally at random.  
 There are two basic problems here. 
 
