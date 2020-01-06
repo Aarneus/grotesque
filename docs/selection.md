@@ -14,16 +14,18 @@ The default selector function above just picks a rule at random.
 Note that you can use the `:data` key in the grammar to store metadata about the rules.  
 For example, you can save the rule id of every rule selected and prefer those that have been selected least:  
 ```clojure
-(grotesque/set-selector grammar (fn [old-grammar head bodies]
-                                  (let [selected (->> bodies
-                                                      (sort-by #(-> old-grammar :data :times-selected ((:id %))))
-                                                      first)]
-                                    (-> old-grammar
-                                        (update-in [:data :times-selected (:id selected)] #(if (nil? %) 1 (inc %)))
-                                        (assoc :selected selected)))))
+(grotesque/set-selector 
+  grammar 
+  (fn [old-grammar head bodies]
+    (let [selected (->> bodies
+                        (sort-by #(-> old-grammar :data :times-selected ((:id %))))
+                        first)]
+      (-> old-grammar
+          (update-in [:data :times-selected (:id selected)] #(if (nil? %) 1 (inc %)))
+          (assoc :selected selected)))))
 ```
 
-You can also make metaselectors.  
+### Metaselectors
 If you wanted to e.g. have a character’s name appear in the text, 
 you could generate a rule for the character that has their name on it.  
 But you could also make a selector that does the job for you:  
@@ -38,4 +40,4 @@ But you could also make a selector that does the job for you:
 ```
 Note that rule heads are keywords without dots.  
 So `:story` is a valid head but `:dance.time` is not.  
-This is because it would interfere with modifiers, [a planned feature](future.md). 
+This is because it would interfere with [modifiers](future.md#modifiers), a planned feature. 

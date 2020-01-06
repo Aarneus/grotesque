@@ -58,10 +58,10 @@ The simplest way to start playing with Grotesque is to generate a simple grammar
 (ns example.core
   (:require [grotesque.core :as grotesque]))
 
-(defn handler-fn [grammar [_ attribute value]]
+(defn handler-fn [grammar [attribute value]]
   (assoc-in grammar [:data :model attribute] value))
 
-(defn validator-fn [grammar [_ attribute value]]
+(defn validator-fn [grammar [attribute value]]
   (= value (get-in grammar [:data :model attribute])))
 
 (-> {"color"    ["red" "blue" "green"]

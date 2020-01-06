@@ -27,7 +27,7 @@ Both of the following rules (and the grammar as a whole) are valid:
 The head of the rule can be given either as a keyword or a string.  
 It is internally changed to a keyword anyway.  
 However, it should not contain any periods `.` or be a single capital letter e.g. `W`.  
-These are reserved for future features.
+These are reserved for [future](future.md#modifiers) [features](future.md#pattern-matching).
 
 A single rule body can consist of just the phrase, if there are no effects or conditions.  
 Otherwise it should be a vector. 
