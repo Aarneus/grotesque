@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/) and uses [semantic versioning](https://semver.org/).
 
-## [1.0.1]
+## [1.0.1] - 2020-01-18
 ### Fixed
 - The internal util macro try-catch-cljc (didn't work in CLJS when requiring the library)
 
