@@ -6,13 +6,13 @@
 
 (def test-grammar (grotesque/create-grammar test-utils/test-rules))
 
-(testing "create-grammar"
+(deftest create-grammar
   (test-diff {:rules {} :errors []}
              (grotesque/create-grammar))
   (test-diff {:rules test-utils/test-rules-processed :errors []}
              test-grammar))
 
-(testing "generate"
+(deftest generate
   (is (= "abc" (-> {:S ["a#B#"] :B ["b#C#"] :C ["c"]}
                    grotesque/create-grammar
                    (grotesque/generate "#S#")
@@ -21,14 +21,14 @@
             s (:generated new-grammar)]
         (and (map? new-grammar) (string? s)))))
 
-(testing "parse errors"
+(deftest parse-errors
   (test-diff (-> {:S [["#a#" 12]]}
                  grotesque/create-grammar)
              {:errors #?(:cljs ["Error in 'S':\nWhile parsing rule 'S-0':\n"]
                          :clj  ["Error in 'S':\nWhile parsing rule 'S-0':\njava.lang.Long cannot be cast to clojure.lang.Named"])
               :rules  {}}))
 
-(testing "missing rule"
+(deftest missing-rule
   (test-diff (-> {:S ["textS #A#"]
                   :A ["textA #b# #C#"]
                   :B ["textB"]
@@ -40,7 +40,7 @@
                           "No valid rule 'b' found"]
               :generated "textS textA  textC"}))
 
-(testing "selectors"
+(deftest selectors
   (let [meta-selector-fn (fn [grammar head bodies]
                            (is (= :S head))
                            (is (= bodies [{:id :S-0, :text ["a"]}

@@ -17,7 +17,7 @@
   [grammar condition]
   (= (last condition) (get-in grammar (concat [:data :model] (drop-last condition)))))
 
-(testing "generate (with model)"
+(deftest generate-with-model
   (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
                        :set-var [["" :set.banana.tree.value.A]]
                        :get-var [["DEF" :when.banana.tree.value.D]
@@ -29,7 +29,7 @@
                       (grotesque/generate "#S#")
                       :generated))))
 
-(testing "errors in model"
+(deftest errors-in-model
   (test-diff (-> {:S ["s#A#s#B#s"]
                   :A [["" :test-cnd.random]]
                   :B [["" :test-fx.random]]}
