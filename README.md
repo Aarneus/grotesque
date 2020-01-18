@@ -7,17 +7,6 @@ Uses a context-free grammar similar to [Tracery](https://tracery.io/) but with a
 
 Honestly if I didn't want to to use this library with Clojure this would most likely be a Tracery extension.
 
-### Warning!
-This library is still a work-in-progress and hasn't e.g. been fully tested with ClojureScript.
-
-### Features to be done for 1.0
-- [x] Rule parsing
-- [x] Text generation
-- [x] Effects and conditions
-- [x] Unit testing & schema validation
-- [x] User documentation
-- [ ] Final testing and upload
-
 ## A text-generation library
 Grotesque works by generating text according to a grammar defined by you.
 ### An example grammar

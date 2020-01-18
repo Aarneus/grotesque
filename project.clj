@@ -1,4 +1,4 @@
-(defproject grotesque "0.6.0"
+(defproject grotesque "1.0.0"
   :description  "A context-free grammar with state for text generation"
   :url          "https://github.com/Aarneus/grotesque"
   :license      {:name "MIT License"
@@ -16,5 +16,4 @@
   :source-paths ["src" "src/cljc"]
   :test-paths   ["test" "test/cljc"]
   :doo {:build "test-build"
-        :alias {:default [:chrome-headless]}}
-  )
+        :alias {:default [:chrome-headless]}})
