@@ -1,13 +1,13 @@
 # grotesque
 
-A Clojure(script) library for text generation.
 
+A Clojure(script) library for text generation.  
 Uses a context-free grammar similar to [Tracery](https://tracery.io/) but with added 
-[state conditions and effects on rules](https://emshort.blog/2019/11/29/storylets-you-want-them/).
-
+[state conditions and effects on rules](https://emshort.blog/2019/11/29/storylets-you-want-them/).  
 Honestly if I didn't want to to use this library with Clojure this would most likely be a Tracery extension.
 
-![](https://github.com/Aarneus/grotesque/workflows/Clojure%20CI/badge.svg)
+![Tests](https://github.com/Aarneus/grotesque/workflows/Clojure%20CI/badge.svg)
+[![Clojars Project](https://img.shields.io/clojars/v/grotesque.svg)](https://clojars.org/grotesque)
 
 ## A text-generation library
 Grotesque works by generating text according to a grammar defined by you.
