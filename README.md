@@ -7,7 +7,7 @@ Uses a context-free grammar similar to [Tracery](https://tracery.io/) but with a
 
 Honestly if I didn't want to to use this library with Clojure this would most likely be a Tracery extension.
 
-![](https://github.com/Aarnes/grotesque/workflows/Clojure%20CI/badge.svg)
+![](https://github.com/Aarneus/grotesque/workflows/Clojure%20CI/badge.svg)
 
 ## A text-generation library
 Grotesque works by generating text according to a grammar defined by you.
