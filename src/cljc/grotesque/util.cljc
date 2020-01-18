@@ -37,6 +37,7 @@
   [s]
   (if (string? s)
     (->> (string/split s #"(\[|\]|#)")
+         (remove #{"[" "]" "#"}) ; ClojureScript split leaves the separators sometimes
          (map #(if (even? %1) %2 (keyword %2)) (range))
          (remove #(or (= nil %) (= "" %)))
          vec)
