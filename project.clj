@@ -1,4 +1,4 @@
-(defproject grotesque "1.0.0"
+(defproject grotesque "1.0.1"
   :description  "A context-free grammar with state for text generation"
   :url          "https://github.com/Aarneus/grotesque"
   :license      {:name "MIT License"

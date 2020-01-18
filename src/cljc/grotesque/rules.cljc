@@ -56,11 +56,13 @@
   "Adds the given rule to the grammar.
    See the comment on add-rules for more detail."
   [grammar [head bodies]]
-  (util/try-catch-cljc grammar (str "Error in '" (name head) "':")
-    (let [head (keyword head)]
-      (update-in grammar
-                 [:rules head]
-                 #(add-bodies head % bodies)))))
+  (util/try-catch grammar
+                  (str "Error in '" (name head) "':")
+                  (fn []
+                    (let [head (keyword head)]
+                      (update-in grammar
+                                 [:rules head]
+                                 #(add-bodies head % bodies))))))
 
 (defn add-rules
   "Takes a map of rules.

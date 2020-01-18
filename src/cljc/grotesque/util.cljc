@@ -20,24 +20,15 @@
     #?(:cljs (throw (js/Error. message))
        :clj  (throw (Exception. ^String message)))))
 
-(defmacro try-catch-cljc
-  "Catches JavaScript Errors or Java Exceptions depending on the language and extracts their message.
-   Appends it to the given message and stores it in the grammar's `:errors` vector.
-   Is paired with `throw-cljc`."
-  [grammar message & body]
-  (if (:ns &env) ; Check if macro in cljs
-    `(try
-       (do ~@body)
-       (catch js/Error e#
-         (-> ~grammar
-             (dissoc :selected)
-             (add-error (str ~message "\n" e#)))))
-    `(try
-       (do ~@body)
-       (catch Exception e#
-         (-> ~grammar
-             (dissoc :selected)
-             (add-error (str ~message "\n" (.getMessage e#))))))))
+(defn try-catch
+  "Wraps the given function inside a try-catch block"
+  [grammar message performed-fn]
+  (try
+    (performed-fn)
+    (catch #?(:clj Exception :cljs js/Error) e
+      (-> grammar
+          (dissoc :selected)
+          (add-error (str message "\n" #?(:clj (.getMessage e) :cljs e)))))))
 
 (defn parse-symbol-string
   "Returns a vector representation of the terminal and non-terminal symbols in the given string.

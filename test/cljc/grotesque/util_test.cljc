@@ -11,7 +11,7 @@
              "Hello [world.state]" ["Hello " :world.state]
              "#A-1##B#cde#FG#hi" [:A-1 :B "cde" :FG "hi"]))
 
-(deftest try-catch-cljc
+(deftest try-catch
   (is (= {:errors ["catched-msg\nthrown-msg"]}
-         (util/try-catch-cljc {} "catched-msg"
-           (util/throw-cljc "thrown-msg")))))
+         (util/try-catch {} "catched-msg"
+           #(util/throw-cljc "thrown-msg")))))

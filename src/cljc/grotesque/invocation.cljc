@@ -23,15 +23,16 @@
    (as a vector of terminal and non-terminal symbols)."
   [grammar non-terminal]
   (let [grammar     (dissoc grammar :selected)
-        new-grammar (util/try-catch-cljc
+        new-grammar (util/try-catch
                       grammar
                       (str "Error while invoking '" (name non-terminal) "':")
-                      (when-not (contains? (:rules grammar) non-terminal)
-                        (util/throw-cljc (str "No rule '" (name non-terminal) "' found, a possible typo?")))
-                      (->> (get-in grammar [:rules non-terminal] [])
-                           (filter #(model/valid-rule? grammar %))
-                           ((get-selector-fn grammar) grammar non-terminal)
-                           model/execute-rule))]
+                      (fn []
+                        (when-not (contains? (:rules grammar) non-terminal)
+                          (util/throw-cljc (str "No rule '" (name non-terminal) "' found, a possible typo?")))
+                        (->> (get-in grammar [:rules non-terminal] [])
+                             (filter #(model/valid-rule? grammar %))
+                             ((get-selector-fn grammar) grammar non-terminal)
+                             model/execute-rule)))]
     (if (picked-some? new-grammar)
        [new-grammar (or (-> new-grammar :selected :text) [""])]
        [(util/add-error new-grammar (str "No valid rule '" (name non-terminal) "' found")) [""]])))
