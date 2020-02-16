@@ -9,12 +9,12 @@
 
 (defn test-set-handler
   "Test effect handler"
-  [grammar [_ & tag-body]]
+  [grammar _ [_ & tag-body]]
   (assoc-in grammar (concat [:data :model] (drop-last tag-body)) (last tag-body)))
 
 (defn test-when-validator
   "Test condition validator"
-  [grammar [_ & tag-body :as tag]]
+  [grammar _ [_ & tag-body]]
   (= (last tag-body) (get-in grammar (concat [:data :model] (drop-last tag-body)))))
 
 (deftest generate-with-model
@@ -34,8 +34,8 @@
                   :A [["" :test-cnd.random]]
                   :B [["" :test-fx.random]]}
                  grotesque/create-grammar
-                 (model/set-condition-validator :test-cnd (fn [_ _] (util/throw-cljc "ERROR-1")))
-                 (model/set-effect-handler :test-fx (fn [_ _] (util/throw-cljc "ERROR-2")))
+                 (model/set-condition-validator :test-cnd (fn [_ _ _] (util/throw-cljc "ERROR-1")))
+                 (model/set-effect-handler :test-fx (fn [_ _ _] (util/throw-cljc "ERROR-2")))
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
              {:generated "sss"

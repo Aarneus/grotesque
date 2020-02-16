@@ -4,17 +4,23 @@
 
 (defn set-condition-validator
   "Sets a function to perform validation for a given condition type.
-   Validators take two parameters, the current grammar state and the condition tag and return
-   true if the condition is valid, false if not.
-   They are used to validate a rule when it is being selected."
+   Validators take three parameters:
+   - the current grammar state
+   - the validated rule's id
+   - the condition tag
+   The validator returns true if the condition is valid, false if not.
+   They are used to cull the rules that are sent to the selector function."
   [grammar condition-type validation-fn]
   (assoc-in grammar [:conditions condition-type] validation-fn))
 
 (defn set-effect-handler
   "Sets a function to perform as the handler for a given effect type.
-   Handlers take two parameters, the current grammar state and the effect tag and return
-   the updated grammar state.
-   They are executed after the rule has been selected."
+   Handlers take three parameters:
+   - the current grammar state
+   - the executed rule's id
+   - the effect tag
+   The handler returns the updated grammar state.
+   They are executed after a rule has been selected."
   [grammar effect-type handler-fn]
   (assoc-in grammar [:effects effect-type] handler-fn))
 
@@ -35,7 +41,7 @@
   (every? (fn [tag]
             (try
               (if-let [validator-fn (-> grammar :conditions (get (first tag)))]
-                (validator-fn grammar tag)
+                (validator-fn grammar (:id rule) tag)
                 true)
               (catch #?(:cljs js/Error, :clj Exception) e
                 (util/throw-cljc (get-error-str "Condition" rule tag) e))))
@@ -50,7 +56,7 @@
       (reduce (fn [grammar tag]
                 (try
                   (if-let [handler-fn (-> grammar :effects (get (first tag)))]
-                    (handler-fn grammar tag)
+                    (handler-fn grammar (-> grammar :selected :id) tag)
                     grammar)
                   (catch #?(:cljs js/Error, :clj Exception) e
                     (util/throw-cljc (get-error-str "Effect" (:selected grammar) tag) e))))
