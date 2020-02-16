@@ -10,10 +10,10 @@
    2. Keyword: :when.weather.snowing, :set.mood.chill
    3. String: \"when.weather.snowing\", \"set.mood.chill\"
    All the above examples would result in the following (when body is {}):
-   {:when [[:when :weather :snowing]], :set [[:set :mood :chill]]}"
+   {:tags [[:when :weather :snowing] [:set :mood :chill]]}"
   [rule part]
   (if (vector? part)
-    (update-in rule [:tags (first part)] #(conj (vec %) (vec (rest part))))
+    (update rule :tags #(conj (vec %) (vec part)))
     (-> (name part)
         (string/split #"\.")
         (->> (mapv keyword)
@@ -75,6 +75,9 @@
 
    Tracery style rule map with just string keys to a vector of string values is also accepted:
    {\"animal\" [\"okapi\", \"giraffe\", \"antilope\",
-    \"job\" [\"doctor\", \"lawyer\", \"gambler\"]}"
+    \"job\" [\"doctor\", \"lawyer\", \"gambler\"]}
+
+   Note that the order of tags is important for validation and execution;
+   the most restrictive condition should be placed first and the effects are executed in order as well."
   [grammar rules]
   (reduce add-rule (assoc grammar :errors []) rules))

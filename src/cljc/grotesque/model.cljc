@@ -19,41 +19,40 @@
   (assoc-in grammar [:effects effect-type] handler-fn))
 
 (defn- get-body-str
-  [type body]
-  (->> (concat [type] body)
-       (map name)
+  [[head & tail]]
+  (->> (map name tail)
+       (concat [(str head)])
        (str/join ".")))
 
+(defn- get-error-str [prefix rule tag]
+  (str prefix " error in rule '" (:id rule) "' in tag '" (get-body-str tag) "'"))
+
 (defn valid-rule?
-  "Returns true if the given rule body's conditions match the current grammar state."
+  "Returns true if the given rule body's conditions match the current grammar state.
+   Tags that are conditions are checked in their original order.
+   This means that you should place the most restrictive tags first and non-conditions last."
   [grammar rule]
-  (try
-    (let [condition-types        (keys (:conditions grammar))
-          get-conditions-of-type (fn [type]
-                                   (-> rule :tags type))
-          condition-valid?       (fn [type grammar condition]
-                                   (try
-                                     ((-> grammar :conditions type) grammar condition)
-                                     (catch #?(:cljs js/Error, :clj Exception) e
-                                       (util/throw-cljc (str "Condition '" (get-body-str type condition) "'") e))))]
-      (every? #(every? (partial condition-valid? % grammar)
-                       (get-conditions-of-type %))
-              condition-types))
-    (catch #?(:cljs js/Error, :clj Exception) e
-      (util/throw-cljc (str "Condition error in rule '" (:id rule) "'") e))))
+  (every? (fn [tag]
+            (try
+              (if-let [validator-fn (-> grammar :conditions (get (first tag)))]
+                (validator-fn grammar tag)
+                true)
+              (catch #?(:cljs js/Error, :clj Exception) e
+                (util/throw-cljc (get-error-str "Condition" rule tag) e))))
+          (:tags rule)))
 
 (defn execute-rule
-  "Returns the new grammar state after performing all effects in the given rule."
+  "Returns the new grammar state after performing all effects in the selected rule.
+   Tags effects are executed in their original order."
   [grammar]
-  (try
-    (if (-> grammar :selected nil?)
+  (if (-> grammar :selected nil?)
       grammar
-      (reduce (fn [grammar type]             ; Iterate over all effect types
-                (reduce (fn [grammar effect] ; Iterate over all effects of given type
-                          ((-> grammar :effects type) grammar effect))
-                        grammar
-                        (-> grammar :selected :tags type)))
+      (reduce (fn [grammar tag]
+                (try
+                  (if-let [handler-fn (-> grammar :effects (get (first tag)))]
+                    (handler-fn grammar tag)
+                    grammar)
+                  (catch #?(:cljs js/Error, :clj Exception) e
+                    (util/throw-cljc (get-error-str "Effect" (:selected grammar) tag) e))))
               grammar
-              (keys (:effects grammar))))
-    (catch #?(:cljs js/Error, :clj Exception) e
-      (util/throw-cljc (str "Effect error in rule '" (-> grammar :selected :id) "'") e))))
+              (-> grammar :selected :tags))))

@@ -9,13 +9,13 @@
 
 (defn test-set-handler
   "Test effect handler"
-  [grammar effect]
-  (assoc-in grammar (concat [:data :model] (drop-last effect)) (last effect)))
+  [grammar [_ & tag-body]]
+  (assoc-in grammar (concat [:data :model] (drop-last tag-body)) (last tag-body)))
 
 (defn test-when-validator
   "Test condition validator"
-  [grammar condition]
-  (= (last condition) (get-in grammar (concat [:data :model] (drop-last condition)))))
+  [grammar [_ & tag-body :as tag]]
+  (= (last tag-body) (get-in grammar (concat [:data :model] (drop-last tag-body)))))
 
 (deftest generate-with-model
   (is (= "ABCDEF" (-> {:S       ["#set-var##get-var##get-var#"]
@@ -39,7 +39,7 @@
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
              {:generated "sss"
-              :errors    ["Error while invoking 'A':\nCondition error in rule ':A-0':\nCondition 'test-cnd.random':\nERROR-1"
+              :errors    ["Error while invoking 'A':\nCondition error in rule ':A-0' in tag ':test-cnd.random':\nERROR-1"
                           "No valid rule 'A' found"
-                          "Error while invoking 'B':\nEffect error in rule ':B-0':\nERROR-2"
+                          "Error while invoking 'B':\nEffect error in rule ':B-0' in tag ':test-fx.random':\nERROR-2"
                           "No valid rule 'B' found"]}))
