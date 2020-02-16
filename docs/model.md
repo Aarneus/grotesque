@@ -76,7 +76,10 @@ Note that the preferred, purely functional way for conditions to handle data is 
 There is however nothing to stop you from using non-functional validators, if you so choose.  
 This is useful in testing, when you might like to e.g. log a validator’s results.
 
-The parameters of a validator are the grammar and the condition being validated.  
+The tags are validated in the same order as they are in the rule declaration.  
+This means that you should place the most restrictive condition first for optimization reasons.
+
+The parameters of a validator are the grammar, the rule id and the condition tag being validated.  
 It should always return a truthy value when the condition is valid and falsy (false or nil) when not.  
 
 Conditions are identified and dispatched to the validator by the first part of the keyword tag.  
@@ -99,7 +102,7 @@ Another thing to keep in mind though that this doesn’t mean some ‘metacondit
 For example, you probably want some variation of the `:not.*` condition which will be true if the condition tag it
 precedes is not valid:  
 ```clojure
-(grotesque/set-validator grammar :not (fn [old-grammar [tag & args]]
+(grotesque/set-validator grammar :not (fn [old-grammar rule-id [tag & args]]
                                         (not ((-> old-grammar :conditions tag) old-grammar args))))
 ```
 
@@ -109,15 +112,19 @@ Note that there is nothing that excludes a tag from being both a condition and a
 
 ### Effects
 Effects are tags that update the grammar after the rule they are attached to has been chosen by the rule selector.  
-This is preferred to be handled in a purely functional way (similar to conditions) but there is nothing to stop you from having side-effects for e.g. testing purposes.  
+This is preferred to be handled in a purely functional way (similar to conditions) but there is nothing to stop you 
+from having side-effects for e.g. testing purposes.  
+
+The effects are executed in the same order they are declared in the rule.  
+Normally this shouldn't matter, though.
 
 You make a tag into an effect by adding a handler function for that tag:  
 ```clojure
-(grotesque/set-handler grammar :set (fn [old-grammar [variable value]]
+(grotesque/set-handler grammar :set (fn [old-grammar rule-id [variable value]]
                                       (assoc-in old-grammar [:data variable] value)))
 ```
 
-A handler takes as parameters the current grammar and the effect tag and returns the updated grammar. 
+A handler takes as parameters the current grammar, the rule id and the effect tag and returns the updated grammar. 
 
 The `:data` key in the grammar has been reserved for communicating the world model between effects, conditions and 
 rule selectors and can include any data you need.

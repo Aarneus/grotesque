@@ -6,7 +6,7 @@
   "A schema for a grotesque rule body."
   {:id                    s/Keyword
    (s/optional-key :text) [(s/pred #(or (string? %) (keyword? %)))]
-   (s/optional-key :tags) {s/Keyword [[s/Any]]}})
+   (s/optional-key :tags) [[s/Keyword]]})
 
 (def Grammar
   "A schema for a grotesque grammar."

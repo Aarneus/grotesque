@@ -33,7 +33,7 @@ The basic functionality of the grammar is that a word in the text that is surrou
 Here `"The #color# ball."` is replaced with e.g. `"The blue ball."`
 
 Note that rules also accept either strings or keywords as their keys.  
-They also accept brackets ([ and ]) instead of hashtags.
+They also accept brackets [ and ] as separators instead of hashtags.
 
 This simple example also demonstrates how the state handling works. The `:vehicle` rules set the type of vehicle and the `:terrain` checks it to make sure that e.g. `A red boat is in the sky.` is never generated.
 
@@ -47,12 +47,12 @@ Read the docs [here](docs/overview.md).
 The simplest way to start playing with Grotesque is to generate a simple grammar with an equally simple example model:
 ```clojure
 (ns example.core
-  (:require [grotesque.core :as grotesque]))
+  (:require [grotesque.core :as g]))
 
-(defn handler-fn [grammar [attribute value]]
+(defn handler-fn [grammar rule-id [attribute value]]
   (assoc-in grammar [:data :model attribute] value))
 
-(defn validator-fn [grammar [attribute value]]
+(defn validator-fn [grammar rule-id [attribute value]]
   (= value (get-in grammar [:data :model attribute])))
 
 (-> {"color"    ["red" "blue" "green"]
@@ -63,10 +63,10 @@ The simplest way to start playing with Grotesque is to generate a simple grammar
                  ["in the water" :when.vehicle.boat]
                  ["in the sky"   :when.vehicle.plane]]
      "position" ["A #color# #vehicle# is #terrain#."]}
-    (grotesque/create-grammar)
-    (grotesque/set-handler :set handler-fn)
-    (grotesque/set-validator :when validator-fn)
-    (grotesque/generate "#position#")
+    (g/create-grammar)
+    (g/set-handler :set handler-fn)
+    (g/set-validator :when validator-fn)
+    (g/generate "#position#")
     :generated)
 ```
 

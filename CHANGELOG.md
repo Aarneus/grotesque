@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/) and uses [semantic versioning](https://semver.org/).
 
+## [2.0.0] - 2020-02-16
+### Changed
+- Conditions are now validated in order of declaration
+- Effects are now executed in order of declaration
+- Condition validator and effect handler functions now get the grammar, 
+rule id and the whole tag as parameters (instead of omitting the first keyword)
+- Error messages now include the tag as well as rule that caused the error
+
 ## [1.0.2] - 2020-01-18
 ### Fixed
 - ClojureScript string parsing when requiring the library
@@ -15,7 +23,8 @@ All notable changes to this project will be documented in this file. This change
 - Tests
 - Documentation
 
-[Unreleased]: https://github.com/Aarneus/grotesque/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/Aarneus/grotesque/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/Aarneus/grotesque/compare/1.0.2...2.0.0
 [1.0.2]: https://github.com/Aarneus/grotesque/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Aarneus/grotesque/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Aarneus/grotesque/compare/0.0.0...1.0.0
