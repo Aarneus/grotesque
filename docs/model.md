@@ -76,6 +76,9 @@ Note that the preferred, purely functional way for conditions to handle data is 
 There is however nothing to stop you from using non-functional validators, if you so choose.  
 This is useful in testing, when you might like to e.g. log a validator’s results.
 
+The tags are validated in the same order as they are in the rule declaration.  
+This means that you should place the most restrictive condition first for optimization reasons.
+
 The parameters of a validator are the grammar, the rule id and the condition tag being validated.  
 It should always return a truthy value when the condition is valid and falsy (false or nil) when not.  
 
@@ -109,7 +112,11 @@ Note that there is nothing that excludes a tag from being both a condition and a
 
 ### Effects
 Effects are tags that update the grammar after the rule they are attached to has been chosen by the rule selector.  
-This is preferred to be handled in a purely functional way (similar to conditions) but there is nothing to stop you from having side-effects for e.g. testing purposes.  
+This is preferred to be handled in a purely functional way (similar to conditions) but there is nothing to stop you 
+from having side-effects for e.g. testing purposes.  
+
+The effects are executed in the same order they are declared in the rule.  
+Normally this shouldn't matter, though.
 
 You make a tag into an effect by adding a handler function for that tag:  
 ```clojure
