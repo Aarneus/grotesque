@@ -1,5 +1,6 @@
 (ns grotesque.core-test
-  (:require [grotesque.core :as grotesque]
+  (:require [clojure.string :as string]
+            [grotesque.core :as grotesque]
             [grotesque.test-utils :as test-utils :refer [test-diff]]
             #?(:cljs [cljs.test :refer-macros [is are deftest testing]]
                :clj  [clojure.test :refer [is are deftest testing]])))
@@ -22,11 +23,11 @@
         (and (map? new-grammar) (string? s)))))
 
 (deftest parse-errors
-  (test-diff (-> {:S [["#a#" 12]]}
-                 grotesque/create-grammar)
-             {:errors #?(:cljs ["Error in 'S':\nWhile parsing rule 'S-0':\n"]
-                         :clj  ["Error in 'S':\nWhile parsing rule 'S-0':\njava.lang.Long cannot be cast to clojure.lang.Named"])
-              :rules  {}}))
+  ;; The specific errors depend a lot on the environment; here check the common parts
+  (let [{:keys [errors rules]} (grotesque/create-grammar {:S [["#a#" 12]]})]
+    (is (= 1 (count errors)))
+    (is (= {} rules))
+    (is (string/starts-with? (first errors) "Error in 'S':\nWhile parsing rule 'S-0':"))))
 
 (deftest missing-rule
   (test-diff (-> {:S ["textS #A#"]
@@ -53,3 +54,13 @@
                (grotesque/set-selector meta-selector-fn)
                (grotesque/generate "[S]")
                :generated)))))
+
+(deftest modifiers
+  (is (= "Mash three pearrrs."
+         (-> {:food ["pear"]
+              :pirate-recipe ["Mash three #food.pirate.plural#."]}
+             (grotesque/create-grammar)
+             (grotesque/set-modifier :pirate #(string/replace % #"[aeiouy]r" "$0rr"))
+             (grotesque/set-modifier :plural #(str % "s"))
+             (grotesque/generate "#pirate-recipe#")
+             :generated))))
