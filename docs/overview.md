@@ -1,6 +1,4 @@
-## Overview of the system
-There are three main parts in the Grotesque text generation system:
-
+## Grotesque documentation contents
 - [Grammar structure](grammar.md)
   - [Rule syntax](grammar.md#rule-syntax)  
 - [Rule selection](selection.md)  
@@ -9,5 +7,6 @@ There are three main parts in the Grotesque text generation system:
   - [Tags](model.md#tags)
   - [Conditions](model.md#conditions)
   - [Effects](model.md#effects)  
+- [Text output modifiers](modifiers.md)
 
-Features planned in the future after 1.0 are detailed [here](future.md).
+[Features planned for the future](future.md)

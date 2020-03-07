@@ -66,9 +66,9 @@ You make a tag into a condition by adding a validator function for that tag:
 (-> {:weather [["snowing" :season.winter]
                ["scorching" :season.summer]
                ["raining"]]}
-    grotesque/create-grammar
-    (grotesque/set-validator :season (fn [grammar [value]]
-                                       (= value (get-in grammar [:data :season])))))
+    grotesque.core/create-grammar
+    (grotesque.core/set-validator :season (fn [grammar [value]]
+                                            (= value (get-in grammar [:data :season])))))
 ```
 This will ensure that rules related to summer are not chosen in winter and vice versa.  
 
@@ -102,8 +102,8 @@ Another thing to keep in mind though that this doesn’t mean some ‘metacondit
 For example, you probably want some variation of the `:not.*` condition which will be true if the condition tag it
 precedes is not valid:  
 ```clojure
-(grotesque/set-validator grammar :not (fn [old-grammar rule-id [tag & args]]
-                                        (not ((-> old-grammar :conditions tag) old-grammar args))))
+(grotesque.core/set-validator grammar :not (fn [old-grammar rule-id [tag & args]]
+                                             (not ((-> old-grammar :conditions tag) old-grammar args))))
 ```
 
 An important counterpart to conditions are effects.  
@@ -120,8 +120,8 @@ Normally this shouldn't matter, though.
 
 You make a tag into an effect by adding a handler function for that tag:  
 ```clojure
-(grotesque/set-handler grammar :set (fn [old-grammar rule-id [variable value]]
-                                      (assoc-in old-grammar [:data variable] value)))
+(grotesque.core/set-handler grammar :set (fn [old-grammar rule-id [variable value]]
+                                           (assoc-in old-grammar [:data variable] value)))
 ```
 
 A handler takes as parameters the current grammar, the rule id and the effect tag and returns the updated grammar. 
@@ -136,13 +136,13 @@ For example, maybe you don’t want to set up the model before generation and
 would like the first time winter is referred to also set it as the current season:  
 ```clojure
 (-> grammar
-    (grotesque/set-handler :season (fn [grammar [season]]
-                                     (assoc-in grammar [:data :season] season)))
-    (grotesque/set-validator :season (fn [grammar [season]]
-                                       (let [current-season (-> grammar :data :season)]
-                                         (or (nil? current-season)
-                                             (= season current-season))))))
-```
+    (grotesque.core/set-handler :season (fn [grammar [season]]
+                                          (assoc-in grammar [:data :season] season)))
+    (grotesque.core/set-validator :season (fn [grammar [season]]
+                                           (let [current-season (-> grammar :data :season)]
+                                             (or (nil? current-season)
+                                                 (= season current-season))))))
+``` 
 This will ensure that no matter what season we encounter first, all the following rules selected will be compatible with it.  
 This is one way of simplifying complex logic by baking it in the tag handling.  
 The world model for your text is probably specific to your project.  
