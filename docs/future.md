@@ -1,8 +1,7 @@
 [Back to overview](overview.md)
 
 ## Notes on future features
-The foremost feature missing from Grotesque at the moment is pattern matching.  
-A second important missing feature is Tracery-style modifiers. 
+The foremost feature missing from Grotesque at the moment is pattern matching. 
 
 ### Pattern matching
 This will allow the user to specify *wildcard* variables.  
@@ -28,24 +27,6 @@ Therefore, before the conditions were checked the rule body would be morphed int
  :set.john.relationship.jack.hostile]
 ```
 The rule itself would of course remain unchanged and ready to match different variables next time.
-
-### Modifiers
-These should match the standards set by Tracery.  
-Basically these are middleware functions that take the output of the generated text and modify it somehow.
-
-An example would be e.g. capitalization of the first letter:
-```
-{:name   ["Lisa" "Tom" "Marie"]
- :animal ["wombat" "giraffe" "bear"]
- :home   ["#name# the #animal.capitalize# lives here."]}
-```
-Which would then output:
-```
-Tom the Wombat lives here.
-Lisa the Bear lives here.
-Marie the Giraffe lives here.
-```
-This would allow the user much more control over the generation.
 
 ### Possible other future features
 Other future features after 1.0 and the ones above could include:
