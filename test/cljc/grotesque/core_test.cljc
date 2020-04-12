@@ -80,4 +80,14 @@
              (grotesque/set-variable :X (constantly [:kitten :puppy]))
              (grotesque/set-variable :Y (constantly [:cat :dog]))
              (grotesque/generate "#combination#")
-             :selected))))
+             :selected)))
+
+  (is (= "This is HUNGARY."
+         (-> {:country ["Hungary"]
+              :test    ["This is #X.Y#."]}
+             grotesque/create-grammar
+             (grotesque/set-modifier :upper string/upper-case)
+             (grotesque/set-variable :X (constantly [:country]))
+             (grotesque/set-variable :Y (constantly [:upper]))
+             (grotesque/generate "#test#")
+             :generated))))

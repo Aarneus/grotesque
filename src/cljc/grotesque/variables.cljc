@@ -29,7 +29,7 @@
   [grammar rule-body]
   (if-let [fns (-> grammar :functions :variable-fns)]
     (let [part-set (-> fns keys set)
-          vars     (->> rule-body :tags flatten distinct (filter part-set))]
+          vars     (->> rule-body ((juxt :tags :text)) flatten distinct (filter part-set))]
       (->> vars
            (map #((get fns %) grammar %))
            (apply combo/cartesian-product)

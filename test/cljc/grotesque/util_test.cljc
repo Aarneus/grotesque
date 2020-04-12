@@ -7,9 +7,9 @@
   (are [s v] (= v (util/parse-symbol-string s))
              "" []
              "abc" ["abc"]
-             "Hello #world#" ["Hello " :world]
-             "Hello [world.state]" ["Hello " :world.state]
-             "#A-1##B#cde#FG#hi" [:A-1 :B "cde" :FG "hi"]))
+             "Hello #world#" ["Hello " [:world]]
+             "Hello [world.state]" ["Hello " [:world :state]]
+             "#A-1##B#cde#FG#hi" [[:A-1] [:B] "cde" [:FG] "hi"]))
 
 (deftest try-catch
   (is (= {:errors ["catched-msg\nthrown-msg"]}
