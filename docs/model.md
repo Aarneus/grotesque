@@ -67,7 +67,7 @@ You make a tag into a condition by adding a validator function for that tag:
                ["scorching" :season.summer]
                ["raining"]]}
     grotesque.core/create-grammar
-    (grotesque.core/set-validator :season (fn [grammar [value]]
+    (grotesque.core/set-validator :season (fn [grammar _ [_ value]]
                                             (= value (get-in grammar [:data :season])))))
 ```
 This will ensure that rules related to summer are not chosen in winter and vice versa.  
@@ -136,9 +136,9 @@ For example, maybe you don’t want to set up the model before generation and
 would like the first time winter is referred to also set it as the current season:  
 ```clojure
 (-> grammar
-    (grotesque.core/set-handler :season (fn [grammar [season]]
+    (grotesque.core/set-handler :season (fn [grammar _ [_ season]]
                                           (assoc-in grammar [:data :season] season)))
-    (grotesque.core/set-validator :season (fn [grammar [season]]
+    (grotesque.core/set-validator :season (fn [grammar _ [_ season]]
                                            (let [current-season (-> grammar :data :season)]
                                              (or (nil? current-season)
                                                  (= season current-season))))))

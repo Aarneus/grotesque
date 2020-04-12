@@ -15,7 +15,8 @@
    (s/optional-key :conditions) {s/Keyword (s/pred fn?)}
    (s/optional-key :effects)    {s/Keyword (s/pred fn?)}
    (s/optional-key :functions)  {(s/optional-key :selector-fn)  (s/pred fn?)
-                                 (s/optional-key :modifier-fns) {s/Keyword (s/pred fn?)}}
+                                 (s/optional-key :modifier-fns) {s/Keyword (s/pred fn?)}
+                                 (s/optional-key :variable-fns) {s/Keyword (s/pred fn?)}}
    (s/optional-key :selected)   RuleBody
    (s/optional-key :generated)  s/Str
    (s/optional-key :errors)     [s/Str]})

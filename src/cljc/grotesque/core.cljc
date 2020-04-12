@@ -4,7 +4,8 @@
             [grotesque.modifiers :as modifiers]
             [grotesque.rules :as rules]
             [grotesque.selection :as selection]
-            [grotesque.util :as util]))
+            [grotesque.util :as util]
+            [grotesque.variables :as variables]))
 
 (def empty-grammar {:rules      {}
                     :errors     []})
@@ -50,3 +51,11 @@
   "Sets the function that takes in a generated string and returns a transformed version.
    See `docs/modifiers.md` for more details."
   modifiers/set-modifier)
+
+(def set-variable
+  "Sets the function that generates candidates for replacing the given tag part.
+   The function takes two arguments, the current grammar and the tag part itself.
+   The function should return a list of keywords that can be used to replace the given tag part
+   in rule tags.
+   See `docs/variables.md` for more details."
+  variables/set-variable)

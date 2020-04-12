@@ -8,5 +8,5 @@
   - [Conditions](model.md#conditions)
   - [Effects](model.md#effects)  
 - [Text output modifiers](modifiers.md)
+- [Wildcard variables](variables.md)
 
-[Features planned for the future](future.md)
