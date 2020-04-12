@@ -14,10 +14,8 @@
 
 (defn- invoke-rule
   "Returns the results of a rule invocation (a map)."
-  [grammar non-terminal]
-  (let [invoked             (name non-terminal)
-        [head & modifiers] (->> (string/split invoked #"\.")
-                                (map keyword))
+  [grammar [head & modifiers]]
+  (let [invoked             (string/join "." (map name (concat [head] modifiers)))
         selector-fn         (selection/get-selector-fn grammar)
         grammar             (dissoc grammar :selected)
         updated-grammar     (util/try-catch

@@ -30,6 +30,14 @@
           (dissoc :selected)
           (add-error (str message "\n" #?(:clj (.getMessage e) :cljs e)))))))
 
+(defn split-keyword
+  "Splits a keyword into a vector of keywords using the period as a separator."
+  [k]
+  (-> (cond-> k
+        (keyword? k) name)
+      (string/split #"\.")
+      (->> (mapv keyword))))
+
 (defn parse-symbol-string
   "Returns a vector representation of the terminal and non-terminal symbols in the given string.
    E.g. \"There is an #animal# here.\" => [\"There is an \" :animal \" here.\"]
@@ -38,7 +46,10 @@
   (if (string? s)
     (->> (string/split s #"(\[|\]|#)")
          (remove #{"[" "]" "#"}) ; ClojureScript split leaves the separators sometimes
-         (map #(if (even? %1) %2 (keyword %2)) (range))
+         (map #(if (even? %1) ; Every odd indexed element is a tag
+                 %2
+                 (split-keyword %2))
+              (range))
          (remove #(or (= nil %) (= "" %)))
          vec)
     ""))
