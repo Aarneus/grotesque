@@ -64,3 +64,21 @@
              (grotesque/set-modifier :plural #(str % "s"))
              (grotesque/generate "#pirate-recipe#")
              :generated))))
+
+(defn- parent-validator [_ _ [_ entity parent]]
+  (and (= :kitten entity)
+       (= :cat parent)))
+
+(deftest variables
+  (is (= {:id   :combination-2
+          :tags [[:parent :kitten :cat]]
+          :text ["Valid combination"]}
+         (-> {:combination [["Invalid combination 1" :parent.X.dog]
+                            ["Invalid combination 2" :parent.puppy.Y]
+                            ["Valid combination" :parent.X.Y]]}
+             grotesque/create-grammar
+             (grotesque/set-validator :parent parent-validator)
+             (grotesque/set-variable :X (constantly [:kitten :puppy]))
+             (grotesque/set-variable :Y (constantly [:cat :dog]))
+             (grotesque/generate "#combination#")
+             :selected))))

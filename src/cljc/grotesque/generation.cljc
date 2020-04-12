@@ -1,10 +1,10 @@
 (ns grotesque.generation
   (:require [clojure.string :as string]
-            [clojure.walk :as walk]
             [grotesque.model :as model]
             [grotesque.modifiers :as modifiers]
             [grotesque.selection :as selection]
-            [grotesque.util :as util]))
+            [grotesque.util :as util]
+            [grotesque.variables :as variables]))
 
 (defn- check-rule
   "Throws an error if the given rule does not exist in the grammar"
@@ -27,11 +27,10 @@
                                 (check-rule grammar head)
                                 (modifiers/check-modifiers grammar modifiers)
                                 (->> (get-in grammar [:rules head] [])
-                                     (filter #(model/valid-rule? grammar %))
+                                     (mapcat #(variables/get-valid-bodies grammar %))
                                      (selector-fn grammar head)
                                      model/execute-rule)))
-        picked-something?   (selection/picked-some? updated-grammar)
-        final-grammar       (if picked-something?
+        final-grammar       (if (selection/picked-some? updated-grammar)
                               updated-grammar
                               (util/add-error updated-grammar (str "No valid rule '" invoked "' found")))]
     {:selected  (-> final-grammar :selected :id)

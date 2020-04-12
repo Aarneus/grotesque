@@ -5,6 +5,7 @@
                  :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/clojurescript "1.10.520"]
+                 [org.clojure/math.combinatorics "0.1.6"]
                  [prismatic/schema "1.1.12"]]
   :plugins      [[lein-cljsbuild "1.1.7"]
                  [lein-doo "0.1.10"]]
