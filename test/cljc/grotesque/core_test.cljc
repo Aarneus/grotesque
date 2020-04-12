@@ -38,8 +38,7 @@
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
              {:errors    ["Error while invoking 'b':\nNo rule 'b' found, a possible typo?"
-                          "No valid rule 'b' found"]
-              :generated "textS textA  textC"}))
+                          "No valid rule 'b' found"]}))
 
 (deftest selectors
   (let [meta-selector-fn (fn [grammar head bodies]
@@ -57,7 +56,7 @@
 
 (deftest modifiers
   (is (= "Mash three pearrrs."
-         (-> {:food ["pear"]
+         (-> {:food          ["pear"]
               :pirate-recipe ["Mash three #food.pirate.plural#."]}
              (grotesque/create-grammar)
              (grotesque/set-modifier :pirate #(string/replace % #"[aeiouy]r" "$0rr"))

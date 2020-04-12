@@ -76,6 +76,7 @@
    See the docstring for `grotesque.core/create-grammar` for more info on the generation of the grammar
    and the docstring for `grotesque.core/generate` for more info on the generation of the starting-vector."
   [grammar starting-vector]
-  (let [[grammar root] (make-generation-tree grammar starting-vector)
-        output-text    (join-generation-tree grammar root)]
-    (assoc grammar :generated output-text)))
+  (let [[grammar root] (make-generation-tree grammar starting-vector)]
+    (if (-> grammar :errors empty?)
+      (assoc grammar :generated (join-generation-tree grammar root))
+      grammar)))
