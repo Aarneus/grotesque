@@ -38,8 +38,7 @@
                  (model/set-effect-handler :test-fx (fn [_ _ _] (util/throw-cljc "ERROR-2")))
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
-             {:generated "sss"
-              :errors    ["Error while invoking 'A':\nCondition error in rule ':A-0' in tag ':test-cnd.random':\nERROR-1"
+             {:errors    ["Error while invoking 'A':\nCondition error in rule ':A-0' in tag ':test-cnd.random':\nERROR-1"
                           "No valid rule 'A' found"
                           "Error while invoking 'B':\nEffect error in rule ':B-0' in tag ':test-fx.random':\nERROR-2"
                           "No valid rule 'B' found"]}))

@@ -1,6 +1,5 @@
 (ns grotesque.rules
-  (:require [clojure.string :as string]
-            [grotesque.util :as util]))
+  (:require [grotesque.util :as util]))
 
 (defn parse-tag
   "Accepted tags are in vector, keyword or string forms.
@@ -14,10 +13,8 @@
   [rule part]
   (if (vector? part)
     (update rule :tags #(conj (vec %) (vec part)))
-    (-> (name part)
-        (string/split #"\.")
-        (->> (mapv keyword)
-             (recur rule)))))
+    (->> (util/split-keyword part)
+         (recur rule))))
 
 (defn parse-body
   "Accepts bodies in vector or string forms.

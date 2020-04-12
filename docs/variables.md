@@ -50,3 +50,6 @@ values for that variable:
         [:X :Y :Z])
 ```
 
+Note that the variables apply to all keywords in the grammar.  
+This includes the [rule heads](selection.md) and [modifiers](modifiers.md).  
+This means that you can e.g. attach a pirate accent to certain characters etc.

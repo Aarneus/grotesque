@@ -38,8 +38,7 @@
                  (grotesque/generate "#S#")
                  (select-keys [:errors :generated]))
              {:errors    ["Error while invoking 'b':\nNo rule 'b' found, a possible typo?"
-                          "No valid rule 'b' found"]
-              :generated "textS textA  textC"}))
+                          "No valid rule 'b' found"]}))
 
 (deftest selectors
   (let [meta-selector-fn (fn [grammar head bodies]
@@ -57,7 +56,7 @@
 
 (deftest modifiers
   (is (= "Mash three pearrrs."
-         (-> {:food ["pear"]
+         (-> {:food          ["pear"]
               :pirate-recipe ["Mash three #food.pirate.plural#."]}
              (grotesque/create-grammar)
              (grotesque/set-modifier :pirate #(string/replace % #"[aeiouy]r" "$0rr"))
@@ -81,4 +80,14 @@
              (grotesque/set-variable :X (constantly [:kitten :puppy]))
              (grotesque/set-variable :Y (constantly [:cat :dog]))
              (grotesque/generate "#combination#")
-             :selected))))
+             :selected)))
+
+  (is (= "This is HUNGARY."
+         (-> {:country ["Hungary"]
+              :test    ["This is #X.Y#."]}
+             grotesque/create-grammar
+             (grotesque/set-modifier :upper string/upper-case)
+             (grotesque/set-variable :X (constantly [:country]))
+             (grotesque/set-variable :Y (constantly [:upper]))
+             (grotesque/generate "#test#")
+             :generated))))

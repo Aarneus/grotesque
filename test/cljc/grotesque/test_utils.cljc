@@ -50,7 +50,7 @@
   {:color [{:id :color-0, :text ["black"], :tags [[:when :time :night]]}
            {:id :color-1, :text ["red"], :tags [[:when :time :evening]]}
            {:id :color-2, :text ["blue"], :tags [[:when :time :day]]}],
-  :sky   [{:id :sky-0, :text [:color " sky"]}]
+  :sky   [{:id :sky-0, :text [[:color] " sky"]}]
   :they  [{:id :they-0, :text ["he"], :tags [[:when :actor :gender :he]]}
           {:id :they-1, :text ["she"], :tags [[:when :actor :gender :she]]}
           {:id :they-2, :text ["they"], :tags [[:when :actor :gender :they]]}]
@@ -64,4 +64,4 @@
                {:id :set-gender-1, :tags [[:set :actor :gender :she]]}
                {:id :set-gender-2, :tags [[:set :actor :gender :they]]}],
   :story      [{:id :story-0,
-                :text [:set-time :set-gender "The " :sky " was looming overhead. So " :they " adjusted " :their " glasses."]}]})
+                :text [[:set-time] [:set-gender] "The " [:sky] " was looming overhead. So " [:they] " adjusted " [:their] " glasses."]}]})

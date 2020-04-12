@@ -5,7 +5,9 @@
 (def RuleBody
   "A schema for a grotesque rule body."
   {:id                    s/Keyword
-   (s/optional-key :text) [(s/pred #(or (string? %) (keyword? %)))]
+   (s/optional-key :text) [(s/pred #(or (string? %)
+                                        (and (vector? %)
+                                             (every? keyword? %))))]
    (s/optional-key :tags) [[s/Keyword]]})
 
 (def Grammar
