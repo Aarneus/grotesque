@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/) and uses [semantic versioning](https://semver.org/).
 
+## [3.0.0] - 2020-04-12
+### Changed
+- Wildcard variables now affect the rule invocation head and modifiers
+- Rule head and modifiers are now stored as a vector in the grammar
+
 ## [2.2.0] - 2020-04-12
 ### Added
 - Wildcard variables are now implemented, see [the docs](docs/variables.md) for more information
@@ -38,7 +43,8 @@ rule id and the whole tag as parameters (instead of omitting the first keyword)
 - Tests
 - Documentation
 
-[Unreleased]: https://github.com/Aarneus/grotesque/compare/2.2.0...HEAD
+[Unreleased]: https://github.com/Aarneus/grotesque/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/Aarneus/grotesque/compare/2.2.0...3.0.0
 [2.2.0]: https://github.com/Aarneus/grotesque/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/Aarneus/grotesque/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/Aarneus/grotesque/compare/1.0.2...2.0.0
